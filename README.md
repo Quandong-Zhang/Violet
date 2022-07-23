@@ -9,3 +9,12 @@
 ```shell
 sudo bash setup.sh&&sudo bash start.sh 
 ```
+# 触发消息格式 
+```
+$<url>$
+```
+如
+```
+$https://www.youtube.com/watch?v=gqmsj7W2VGc$
+```
+直接向机器人所登陆的账号私信发送即可
