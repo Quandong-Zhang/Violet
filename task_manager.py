@@ -4,6 +4,7 @@ import time
 import new_downloader
 
 OWNER=499106648
+REFERSH_TIME=2.5 #检查命令消息间隔时间，单位：分钟
 
 def get_cookie():
     text=open("./cookies.json").read()
@@ -68,6 +69,6 @@ if __name__=="__main__":
                 this_download=True
             n+=1
         if not this_download:
-            time.sleep(2.5*60)
+            time.sleep(REFERSH_TIME*60)
         else:
             this_download=False

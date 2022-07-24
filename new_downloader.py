@@ -46,7 +46,7 @@ def main(vUrl):
         description=description[:250]
     if len(tags)>=10:
         tags=tags[:10]
-    CMD="./biliup upload ./"+str(id_)+"/*.* --desc "+get_double(description)+" --copyright 2 --tag "+get_double(str(tags)[1:-2]+",youtube")+" --tid "+str(TID)+" --source "+get_double(vUrl)+" --line cos --dynamic "+get_double("@"+str(OWNER_NAME))+" --title "+get_double(title)
+    CMD="./biliup upload ./"+str(id_)+"/"+str(id_)+".mp4 --desc "+get_double(description)+" --copyright 2 --tag "+get_double(str(tags)[1:-2]+",youtube")+" --tid "+str(TID)+" --source "+get_double(vUrl)+" --line cos --dynamic "+get_double("@"+str(OWNER_NAME))+" --title "+get_double(title)
     print(CMD)
     os.system(CMD)
     shutil.rmtree('./'+str(id_))
