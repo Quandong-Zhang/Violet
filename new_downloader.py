@@ -7,7 +7,6 @@ import re
 import shutil
 
 OWNER_NAME = "Rerange"
-TID=21
 
 def get_double(s):
     return '"'+s+'"'
@@ -44,7 +43,7 @@ def download_image(url,id_):
         if chunk:
             f.write(chunk)
 
-def main(vUrl):
+def main(vUrl,TID):
     info = get_info(vUrl)
     title = info['title']
     author = info['uploader']
