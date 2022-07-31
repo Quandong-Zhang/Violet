@@ -3,7 +3,7 @@ import json
 import time
 import new_downloader
 
-OWNER=499106648
+OWNER=499106648 #要发送命令的用户uid(现在B站叫mid)
 REFERSH_TIME=2.5 #检查命令消息间隔时间，单位：分钟
 
 def get_cookie():
@@ -50,7 +50,7 @@ def get_task_list():
     return return_list
 
 
-if __name__=="__main__":
+def main():
     try:
         task_history=read()
     except:
@@ -72,3 +72,12 @@ if __name__=="__main__":
             time.sleep(REFERSH_TIME*60)
         else:
             this_download=False
+
+if __name__=="__main__":
+    while True:
+        try:
+            main()
+        except Exception as e:
+            print(e)
+            time.sleep(REFERSH_TIME*60)
+            continue
