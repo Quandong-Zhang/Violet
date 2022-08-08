@@ -1,1 +1,2 @@
 yt_dlp
+requests
