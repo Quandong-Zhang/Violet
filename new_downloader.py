@@ -89,7 +89,7 @@ def main(vUrl,TID):
         i+=1
     strTags = ','.join(tags)
     videoPath=getVideoPath(id_)
-    CMD="./biliup upload "+videoPath+" --desc "+get_double(description)+" --copyright 2 --tag "+get_double(strTags+",youtube")+" --tid "+str(TID)+" --source "+get_double(vUrl)+" --line cos --dynamic "+get_double("@"+str(OWNER_NAME))+" --title "+get_double(title)+" --cover "+str("./"+str(id_)+"/cover.webp")
+    CMD="./biliup upload "+videoPath+" --desc "+get_double(description)+" --copyright 2 --tag "+get_double(strTags+",youtube")+" --tid "+str(TID)+" --source "+get_double(vUrl)+" --line cos --dynamic "+get_double("@"+str(OWNER_NAME))+" --title "+get_double(title)+" --cover "+str("./"+str(id_)+"/cover.jpg")
     print(CMD)
     biliupOutput="".join(os.popen(CMD).readlines())
     if biliupOutput.find("投稿成功")==-1:
