@@ -10,7 +10,7 @@ import yt_dlp
 from PIL import Image
 
 OWNER_NAME = "Rerange"
-REMOVE_FILE=True
+REMOVE_FILE=True #是否删除投稿后的视频文件
 
 def get_double(s):
     return '"'+s+'"'
