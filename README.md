@@ -48,3 +48,5 @@ python3 new_downloader.py <url> <tid>
 ```shell
 python3 new_downloader.py https://www.youtube.com/watch?v=_0-ImzKqMO0 24
 ```
+# 示例demo
+[私の自动手记人偶的B站账号](https://space.bilibili.com/1104072167/video)
