@@ -1,15 +1,30 @@
-import yt_dlp
-import requests
 import json
-import time
 import os
 import re
 import shutil
+import sys
+import time
+
+import requests
+import yt_dlp
+from PIL import Image
 
 OWNER_NAME = "Rerange"
+REMOVE_FILE=True
 
 def get_double(s):
     return '"'+s+'"'
+
+def cover_webp_to_jpg(webp_path, jpg_path):
+    """
+    将webp格式的图片转换为jpg格式的图片
+    :param webp_path: webp格式的图片路径
+    :param jpg_path: jpg格式的图片路径
+    :return: None
+    """
+    im = Image.open(webp_path).convert('RGB')
+    im.save(jpg_path, 'jpeg')
+    im.close()
 
 def download(youtube_url,folder_name):
     ydl_opts = {
@@ -59,6 +74,7 @@ def main(vUrl,TID):
         shutil.rmtree('./'+str(id_))
     download(vUrl,id_)
     download_image(cover, id_)
+    cover_webp_to_jpg("./"+str(id_)+"/cover.webp", "./"+str(id_)+"/cover.jpg")
     title=re.sub(u"([^\u4e00-\u9fa5\u0030-\u0039\u0041-\u005a\u0061-\u007a\u3040-\u31FF\uFF00-\uFFA0\u0020\u3000])", '', title)
     if len(title)>=80:
         title=title[:80]
@@ -79,11 +95,14 @@ def main(vUrl,TID):
     if biliupOutput.find("投稿成功")==-1:
         print(biliupOutput)
         print("投稿失败,是bug或biliup出了问题。ask issues on https://github.com/Quandong-Zhang/youtube-trans-bot/issues or https://github.com/ForgQi/biliup-rs/issues ")
-        shutil.rmtree('./'+str(id_))
+        if REMOVE_FILE:
+            shutil.rmtree('./'+str(id_))
         exit(1)
     print("投稿成功")
-    shutil.rmtree('./'+str(id_))
+    if REMOVE_FILE:
+        shutil.rmtree('./'+str(id_))
 
 if __name__ == '__main__':
-    main("https://www.youtube.com/watch?v=zXdWWHjjx4c")
-    # print(json.loads(get_info("https://www.youtube.com/watch?v=-uzuhqQIaTM")))
+    #在此命令行调用该脚本，参数1为视频链接，如：https://www.youtube.com/watch?v=dQw4w9WgXcQ 参数2为TID，如：21
+    main(sys.argv[1],sys.argv[2])
+    exit(0)
