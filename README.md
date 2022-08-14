@@ -16,7 +16,10 @@ sudo git clone https://github.com/Quandong-Zhang/Violet.git
 cd Violet
 sudo bash setup.sh
 ./biliup login
-sudo bash start.sh #在运行这行之前请先参照下文的"正经的使用方法"中的2，3步对task_manager.py 和 new_downloader.py 做出更改
+```
+在运行下面这行命令之前请先参照下文中"正经的使用方法"中的2，3步对task_manager.py 和 new_downloader.py 做出修改
+```shell
+sudo bash start.sh 
 ```
 ***
 # 正经的使用方法 
