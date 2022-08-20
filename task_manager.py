@@ -49,10 +49,10 @@ def get_task_list():
         if msg_obj["sender_uid"]==OWNER and msg_obj["msg_type"]==1:#鉴权&&防止特殊消息混入
             if msg_obj["content"].find("$")!=-1:
                 return_list.append(match_url(msg_obj["content"]))
-            if msg_obj["content"].find("<")!=-1 and msg_obj["content"].find(">")!=-1:
-                TID=int(no_space(msg_obj["content"].split("<")[1].split(">")[0]))
-                print("TID is updated to "+str(TID))
-                save(TID,"./TID.json")
+            #if msg_obj["content"].find("<")!=-1 and msg_obj["content"].find(">")!=-1:
+            #    TID=int(no_space(msg_obj["content"].split("<")[1].split(">")[0]))
+            #    print("TID is updated to "+str(TID))
+            #    save(TID,"./TID.json")
         i+=1
     return return_list
 
@@ -70,7 +70,15 @@ def main():
             task=task_list[n]
             if task not in task_history:
                 print("new task: "+task)
-                new_downloader.main(task,TID)
+                if task.find("*")!=-1:
+                    plain=True
+                else:
+                    plain=False
+                if task.find("<")!=-1:
+                    TID = int(no_space(task.split("<")[1].split(">")[0]))
+                else:
+                    TID = 130 #默认TID misic
+                new_downloader.main(task,TID,plain)
                 task_history.append(task)
                 save(task_history)
                 this_download=True
@@ -81,10 +89,10 @@ def main():
             this_download=False
 
 if __name__=="__main__":
-    try:
-        TID=int(read("./TID.json"))
-    except FileNotFoundError:
-        TID=21 #tid保护性赋值（别问我为什么是生活-日常，因为容易过审）
+#    try:
+#        TID=int(read("./TID.json"))
+#    except FileNotFoundError:
+#        TID=21 #tid保护性赋值（别问我为什么是生活-日常，因为容易过审）
     while True:
         try:
             main()

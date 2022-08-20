@@ -4,6 +4,7 @@ import re
 import shutil
 import sys
 import time
+import base64
 
 import requests
 import yt_dlp
@@ -60,9 +61,36 @@ def download_image(url,id_):
         if chunk:
             f.write(chunk)
 
-def main(vUrl,TID):
+def judge_chs(title):
+    for i in title:
+        if u'\u4e00' <= i <= u'\u9fa5':
+            return True
+    return False
+
+def get_base64(string):
+    return str(base64.b64encode(string.encode('utf-8')).decode('utf-8'))
+
+def get_chs_title(title):
+    while True:
+        publish_title = get_base64(title)
+        if len(publish_title)>80:
+            title = title[:-1]
+            continue
+        else:
+            return publish_title
+
+def cut_tags(tags):
+    i=0
+    while len(tags)>i:
+        if len(tags[i])>20:
+            tags[i]=tags[i][:20]
+        i+=1
+    return tags
+
+def main(vUrl,TID,plain_title=True):
     info = get_info(vUrl)
     title = info['title']
+    dynamic_title = title
     author = info['uploader']
     id_ = info['id']
     description = info['description']
@@ -70,6 +98,7 @@ def main(vUrl,TID):
     cover = info['thumbnail']
     tags.append(author)
     tags.append(OWNER_NAME)
+    # init youtube video info
     try:
         os.mkdir(path='./'+str(id_))
     except FileExistsError:
@@ -77,30 +106,43 @@ def main(vUrl,TID):
     download(vUrl,id_)
     download_image(cover, id_)
     cover_webp_to_jpg("./"+str(id_)+"/cover.webp", "./"+str(id_)+"/cover.jpg")
-    title=title_unsearch.plain_title(title)
+    if plain_title:
+        if judge_chs(title):
+            title = get_chs_title(title)
+        else:
+            title=title_unsearch.plain_title(title)
     title=re.sub(u"([^\u4e00-\u9fa5\u0030-\u0039\u0041-\u005a\u0061-\u007a\u3040-\u31FF\uFF00-\uFFA0\u0020\u3000])", '', title)
-    if len(title)>=80:
+    if len(title)>80:
         title=title[:80]
-    if len(description)>=250:
+    if len(description)>250:
         description=description[:250]
-    if len(tags)>=10:
+    if len(tags)>10:
         tags=tags[:10]
-    i=0
-    while len(tags)>i:
-        if len(tags[i])>20:
-            tags[i]=tags[i][:20]
-        i+=1
+    tags = cut_tags(tags)
     strTags = ','.join(tags)
     videoPath=getVideoPath(id_)
-    CMD="./biliup upload "+videoPath+" --desc "+get_double(description)+" --copyright 2 --tag "+get_double(strTags+",youtube")+" --tid "+str(TID)+" --source "+get_double(vUrl)+" --line cos --dynamic "+get_double("@"+str(OWNER_NAME))+" --title "+get_double(title)+" --cover "+str("./"+str(id_)+"/cover.jpg")
-    print(CMD)
+    CMD="./biliup upload "
+    + videoPath 
+    + " --desc "+get_double(description)
+    + " --copyright 2 "
+    + "--tag "+get_double(strTags+",youtube")
+    + " --tid "+str(TID)
+    + " --source "+get_double(vUrl)
+    + " --line cos "
+    + "--dynamic "+get_double("原标题的base64编码： "+get_base64(dynamic_title))
+    + " --title "+get_double(title)
+    + " --cover "+str("./"+str(id_)+"/cover.jpg")
+    print("Start to using biliup,with these CMD commend:\n",CMD)
     biliupOutput="".join(os.popen(CMD).readlines())
     if biliupOutput.find("投稿成功")==-1:
-        print(biliupOutput)
-        print("投稿失败,是bug或biliup出了问题。ask issues on https://github.com/Quandong-Zhang/youtube-trans-bot/issues or https://github.com/ForgQi/biliup-rs/issues ")
-        if REMOVE_FILE:
-            shutil.rmtree('./'+str(id_))
-        exit(1)
+        if biliupOutput.find("标题相同")==-1:
+            print(biliupOutput)
+            print("投稿失败,是bug或biliup出了问题。ask issues on https://github.com/Quandong-Zhang/youtube-trans-bot/issues or https://github.com/ForgQi/biliup-rs/issues ")
+            exit(1)
+        else:
+            print("这个视频好像之前投过了的说......")
+            if REMOVE_FILE:
+                shutil.rmtree('./'+str(id_))
     print("投稿成功")
     if REMOVE_FILE:
         shutil.rmtree('./'+str(id_))
