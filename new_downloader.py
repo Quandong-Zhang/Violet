@@ -9,6 +9,8 @@ import requests
 import yt_dlp
 from PIL import Image
 
+import title_unsearch
+
 OWNER_NAME = "Rerange"
 REMOVE_FILE=True #是否删除投稿后的视频文件
 
@@ -75,6 +77,7 @@ def main(vUrl,TID):
     download(vUrl,id_)
     download_image(cover, id_)
     cover_webp_to_jpg("./"+str(id_)+"/cover.webp", "./"+str(id_)+"/cover.jpg")
+    title=title_unsearch.plain_title(title)
     title=re.sub(u"([^\u4e00-\u9fa5\u0030-\u0039\u0041-\u005a\u0061-\u007a\u3040-\u31FF\uFF00-\uFFA0\u0020\u3000])", '', title)
     if len(title)>=80:
         title=title[:80]
