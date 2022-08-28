@@ -40,7 +40,7 @@ def match_url(url):
     return no_space(urlStringList[1])
 
 def get_task_list():
-    global TID #顺便刷下TID
+    #global TID #顺便刷下TID
     return_list=[]
     task_list=get_bilibili_api("https://api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs?talker_id="+str(OWNER)+"&session_type=1")["data"]["messages"]
     i=0
@@ -71,9 +71,9 @@ def main():
             if task not in task_history:
                 print("new task: "+task)
                 if task.find("*")!=-1:
-                    plain=True
-                else:
                     plain=False
+                else:
+                    plain=True
                 if task.find("<")!=-1:
                     TID = int(no_space(task.split("<")[1].split(">")[0]))
                 else:

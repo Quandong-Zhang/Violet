@@ -121,17 +121,17 @@ def main(vUrl,TID,plain_title=True):
     tags = cut_tags(tags)
     strTags = ','.join(tags)
     videoPath=getVideoPath(id_)
-    CMD="./biliup upload "
-    + videoPath 
-    + " --desc "+get_double(description)
-    + " --copyright 2 "
-    + "--tag "+get_double(strTags+",youtube")
-    + " --tid "+str(TID)
-    + " --source "+get_double(vUrl)
-    + " --line cos "
-    + "--dynamic "+get_double("原标题的base64编码： "+get_base64(dynamic_title))
-    + " --title "+get_double(title)
-    + " --cover "+str("./"+str(id_)+"/cover.jpg")
+    CMD=("./biliup upload " \
+    + videoPath \
+    + " --desc "+get_double(description) \
+    + " --copyright 2 " \
+    + "--tag "+get_double(strTags+",youtube") \
+    + " --tid "+str(TID) \
+    + " --source "+get_double(vUrl) \
+    + " --line cos " \
+    + "--dynamic "+get_double("原标题的base64编码： "+get_base64(dynamic_title)) \
+    + " --title "+get_double(title) \
+    + " --cover "+str("./"+str(id_)+"/cover.jpg"))
     print("Start to using biliup,with these CMD commend:\n",CMD)
     biliupOutput="".join(os.popen(CMD).readlines())
     if biliupOutput.find("投稿成功")==-1:
