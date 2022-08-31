@@ -70,6 +70,13 @@ def judge_chs(title):
 def get_base64(string):
     return str(base64.b64encode(string.encode('utf-8')).decode('utf-8'))
 
+def get_base64_twice(string):
+    i=0
+    while i<2:
+        string=get_base64(string)
+        i+=1
+    return string
+
 def get_chs_title(title):
     while True:
         publish_title = get_base64(title)
@@ -78,6 +85,13 @@ def get_chs_title(title):
             continue
         else:
             return publish_title
+
+def get_chs_title_twice(title):
+    i=0
+    while i<2:
+        title=get_chs_title(title)
+        i+=1
+    return title
 
 def cut_tags(tags):
     i=0
@@ -107,10 +121,10 @@ def main(vUrl,TID,plain_title=True):
     download_image(cover, id_)
     cover_webp_to_jpg("./"+str(id_)+"/cover.webp", "./"+str(id_)+"/cover.jpg")
     if plain_title:
-        if judge_chs(title):
-            title = get_chs_title(title)
-        else:
+        if not judge_chs(title):
             title=title_unsearch.plain_title(title)
+        else:
+            title = get_chs_title_twice(title)
     title=re.sub(u"([^\u4e00-\u9fa5\u0030-\u0039\u0041-\u005a\u0061-\u007a\u3040-\u31FF\uFF00-\uFFA0\u0020\u3000])", '', title)
     if len(title)>80:
         title=title[:80]
@@ -121,6 +135,10 @@ def main(vUrl,TID,plain_title=True):
     tags = cut_tags(tags)
     strTags = ','.join(tags)
     videoPath=getVideoPath(id_)
+    if plain_title:
+        vUrl="youtube.com"
+        description="-"
+#        tags="搬运，youtube"
     CMD=("./biliup upload " \
     + videoPath \
     + " --desc "+get_double(description) \
@@ -129,7 +147,7 @@ def main(vUrl,TID,plain_title=True):
     + " --tid "+str(TID) \
     + " --source "+get_double(vUrl) \
     + " --line cos " \
-    + "--dynamic "+get_double("原标题的base64编码： "+get_base64(dynamic_title)) \
+    + "--dynamic "+get_double("原标题的base64编码（*2）： "+get_base64_twice(dynamic_title)) \
     + " --title "+get_double(title) \
     + " --cover "+str("./"+str(id_)+"/cover.jpg"))
     print("Start to using biliup,with these CMD commend:\n",CMD)
